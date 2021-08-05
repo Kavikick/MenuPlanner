@@ -1,11 +1,18 @@
 import sqlite3
-from src.Singleton import Singleton
+from Singleton import Singleton
 
 class DataBase(Singleton):
     def __init__(self) -> None:
-        self.connection = sqlite3.connect("test.db")
+        if not self.sourceFile:
+            self.sourceFile = "default"
+
+        self.connection = sqlite3.connect(self.sourceFile+".db")
         self.cursor = self.connection.cursor()
-    
+
+    @classmethod
+    def setSourceFile(cls, file):
+        self.sourceFile = file
+
     def __del__(self):
         self.cursor.close()
         self.connection.commit()
